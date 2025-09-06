@@ -1,6 +1,6 @@
 import { useEffect, useRef } from 'react'
 import Keycloak from 'keycloak-js'
-import { jwtDecode } from 'jwt-decode'
+import jwtDecode from 'jwt-decode'
 import useFlowStore from '../state/useFlowStore'
 
 export default function LoginPanel() {

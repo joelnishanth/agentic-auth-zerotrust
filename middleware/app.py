@@ -1,4 +1,5 @@
 from fastapi import FastAPI, Request, HTTPException
+from fastapi.middleware.cors import CORSMiddleware
 import os, requests, psycopg2, jwt
 
 OPA_URL = os.getenv("OPA_URL", "http://opa:8181/v1/data/authz/allow")
@@ -10,6 +11,15 @@ DBS = {
 }
 
 app = FastAPI()
+
+# Add CORS middleware
+app.add_middleware(
+    CORSMiddleware,
+    allow_origins=["http://localhost:3000", "http://localhost:5173"],  # Frontend URLs
+    allow_credentials=True,
+    allow_methods=["GET", "POST", "PUT", "DELETE", "OPTIONS"],
+    allow_headers=["*"],
+)
 
 
 def decode_token(token: str):
@@ -39,8 +49,17 @@ async def handle_query(request: Request):
         "action": body.get("action"),
         "patient_id": body.get("patient_id"),
     }
+    
+    # Debug logging
+    print(f"DEBUG - User data: {user}")
+    print(f"DEBUG - Input data to OPA: {input_data}")
+    
     opa_resp = requests.post(OPA_URL, json={"input": input_data})
-    allowed = opa_resp.json().get("result", False)
+    opa_result = opa_resp.json()
+    allowed = opa_result.get("result", False)
+    
+    print(f"DEBUG - OPA response: {opa_result}")
+    print(f"DEBUG - Access allowed: {allowed}")
     if not allowed:
         log("deny", input_data)
         raise HTTPException(status_code=403, detail="Access denied")
