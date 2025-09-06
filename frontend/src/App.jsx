@@ -1,8 +1,8 @@
 import LoginPanel from './components/LoginPanel'
+import TokenInfoPanel from './components/TokenInfoPanel'
 import ActionPanel from './components/ActionPanel'
 import FlowDiagram from './components/FlowDiagram'
-import TraceViewer from './components/TraceViewer'
-import ResultPanel from './components/ResultPanel'
+import TracePanel from './components/TracePanel'
 import useFlowStore from './state/useFlowStore'
 
 export default function App() {
@@ -14,10 +14,10 @@ export default function App() {
       <LoginPanel />
       {token && (
         <>
+          <TokenInfoPanel />
           <ActionPanel />
           <FlowDiagram />
-          <TraceViewer />
-          <ResultPanel />
+          <TracePanel />
         </>
       )}
       <footer className="text-center text-sm mt-8">

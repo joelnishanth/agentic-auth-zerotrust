@@ -1,3 +1,4 @@
+import { useState } from 'react'
 import axios from 'axios'
 import useFlowStore from '../state/useFlowStore'
 
@@ -11,6 +12,7 @@ const actions = [
 
 export default function ActionPanel() {
   const { token, setTrace, setResult, reset } = useFlowStore()
+  const [question, setQuestion] = useState('')
 
   const runAction = async a => {
     if (!token) return
@@ -20,7 +22,23 @@ export default function ActionPanel() {
         jwt: token,
         action: a.action,
         db: a.db,
-        context: a.context || {}
+        context: a.context || {},
+      })
+      setTrace(res.data.trace)
+      setResult(res.data)
+    } catch (err) {
+      setResult({ error: 'request failed' })
+    }
+  }
+
+  const ask = async () => {
+    if (!token || !question.trim()) return
+    reset()
+    try {
+      const res = await axios.post('/api/agent/action', {
+        jwt: token,
+        natural_language: question,
+        context: {},
       })
       setTrace(res.data.trace)
       setResult(res.data)
@@ -30,16 +48,33 @@ export default function ActionPanel() {
   }
 
   return (
-    <div className="p-6 mt-4 backdrop-blur bg-white/30 rounded-2xl shadow flex flex-wrap gap-4">
-      {actions.map(a => (
+    <div className="p-6 mt-4 backdrop-blur bg-white/30 rounded-2xl shadow space-y-4">
+      <div className="flex flex-wrap gap-4">
+        {actions.map(a => (
+          <button
+            key={a.label}
+            className="px-4 py-2 bg-indigo-500 text-white rounded hover:bg-indigo-600"
+            onClick={() => runAction(a)}
+          >
+            {a.label}
+          </button>
+        ))}
+      </div>
+      <div className="flex gap-2">
+        <input
+          type="text"
+          value={question}
+          onChange={e => setQuestion(e.target.value)}
+          placeholder="Ask in natural language..."
+          className="flex-1 px-2 py-1 rounded border"
+        />
         <button
-          key={a.label}
-          className="px-4 py-2 bg-indigo-500 text-white rounded hover:bg-indigo-600"
-          onClick={() => runAction(a)}
+          className="px-4 py-2 bg-green-500 text-white rounded hover:bg-green-600"
+          onClick={ask}
         >
-          {a.label}
+          Ask
         </button>
-      ))}
+      </div>
     </div>
   )
 }

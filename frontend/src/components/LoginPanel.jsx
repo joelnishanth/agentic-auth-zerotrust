@@ -4,7 +4,7 @@ import { jwtDecode } from 'jwt-decode'
 import useFlowStore from '../state/useFlowStore'
 
 export default function LoginPanel() {
-  const { token, profile, setToken, setProfile, reset } = useFlowStore()
+  const { token, setToken, setProfile, reset } = useFlowStore()
   const keycloakRef = useRef(null)
 
   useEffect(() => {
@@ -64,16 +64,10 @@ export default function LoginPanel() {
   }
 
   return (
-    <div className="p-6 backdrop-blur bg-white/30 rounded-2xl shadow">
-      <div className="flex justify-between items-center">
-        <h2 className="text-xl font-semibold">User Claims</h2>
-        <button className="px-2 py-1 bg-red-500 text-white rounded" onClick={logout}>
-          Logout
-        </button>
-      </div>
-      <pre className="mt-2 text-sm overflow-auto max-h-60">
-        {JSON.stringify(profile, null, 2)}
-      </pre>
+    <div className="p-6 text-center backdrop-blur bg-white/30 rounded-2xl shadow">
+      <button className="px-4 py-2 bg-red-500 text-white rounded" onClick={logout}>
+        Logout
+      </button>
     </div>
   )
 }
