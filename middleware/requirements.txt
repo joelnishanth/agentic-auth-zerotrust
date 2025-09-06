@@ -1,0 +1,5 @@
+fastapi
+uvicorn[standard]
+requests
+psycopg2-binary
+pyjwt

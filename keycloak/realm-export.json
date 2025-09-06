@@ -1,0 +1,62 @@
+{
+  "realm": "zerotrust",
+  "enabled": true,
+  "roles": {
+    "realm": [
+      {"name": "therapist"},
+      {"name": "admin"},
+      {"name": "analyst"},
+      {"name": "support"},
+      {"name": "superuser"}
+    ]
+  },
+  "users": [
+    {
+      "username": "sarah_therapist",
+      "enabled": true,
+      "credentials": [{"type": "password", "value": "password", "temporary": false}],
+      "realmRoles": ["therapist"],
+      "attributes": {"assigned_patients": ["p001", "p004"], "region": ["us"]}
+    },
+    {
+      "username": "james_therapist",
+      "enabled": true,
+      "credentials": [{"type": "password", "value": "password", "temporary": false}],
+      "realmRoles": ["therapist"],
+      "attributes": {"region": ["eu"]}
+    },
+    {
+      "username": "alice_admin_us",
+      "enabled": true,
+      "credentials": [{"type": "password", "value": "password", "temporary": false}],
+      "realmRoles": ["admin"],
+      "attributes": {"region": ["us"]}
+    },
+    {
+      "username": "claude_admin_eu",
+      "enabled": true,
+      "credentials": [{"type": "password", "value": "password", "temporary": false}],
+      "realmRoles": ["admin"],
+      "attributes": {"region": ["eu"]}
+    },
+    {
+      "username": "maya_analyst",
+      "enabled": true,
+      "credentials": [{"type": "password", "value": "password", "temporary": false}],
+      "realmRoles": ["analyst"],
+      "attributes": {"data_scope": ["de-identified"]}
+    },
+    {
+      "username": "leo_support",
+      "enabled": true,
+      "credentials": [{"type": "password", "value": "password", "temporary": false}],
+      "realmRoles": ["support"]
+    },
+    {
+      "username": "superdev",
+      "enabled": true,
+      "credentials": [{"type": "password", "value": "password", "temporary": false}],
+      "realmRoles": ["superuser"]
+    }
+  ]
+}
