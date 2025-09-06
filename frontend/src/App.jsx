@@ -1,46 +1,30 @@
-import { useState } from 'react'
+import LoginPanel from './components/LoginPanel'
+import ActionPanel from './components/ActionPanel'
+import FlowDiagram from './components/FlowDiagram'
+import TraceViewer from './components/TraceViewer'
+import ResultPanel from './components/ResultPanel'
+import useFlowStore from './state/useFlowStore'
 
 export default function App() {
-  const [token, setToken] = useState('')
-  const [query, setQuery] = useState('')
-  const [result, setResult] = useState('')
-
-  const send = async () => {
-    try {
-      const res = await fetch('http://agent:8000/query', {
-        method: 'POST',
-        headers: {
-          'Content-Type': 'application/json',
-          Authorization: `Bearer ${token}`
-        },
-        body: query
-      })
-      const data = await res.json()
-      setResult(JSON.stringify(data, null, 2))
-    } catch (err) {
-      setResult('error')
-    }
-  }
+  const token = useFlowStore(s => s.token)
 
   return (
-    <div>
-      <h1>Offlyn.ai Zero Trust Demo</h1>
-      <p>This demo showcases an agentic zero‑trust access pattern across US, EU and sandbox
-      databases. Paste a JWT from Keycloak and a JSON query to explore the scenario.</p>
-      <textarea
-        placeholder="JWT"
-        value={token}
-        onChange={e => setToken(e.target.value)}
-        style={{width:'100%',height:'4rem'}}
-      />
-      <textarea
-        placeholder='{"resource":"patients","db":"us_db","action":"read"}'
-        value={query}
-        onChange={e => setQuery(e.target.value)}
-        style={{width:'100%',height:'4rem'}}
-      />
-      <button onClick={send}>Send</button>
-      <pre>{result}</pre>
+    <div className="min-h-screen p-6 space-y-4 bg-gradient-to-br from-slate-100 to-slate-200">
+      <h1 className="text-3xl font-bold text-center">Offlyn.ai — Zero Trust Demo</h1>
+      <LoginPanel />
+      {token && (
+        <>
+          <ActionPanel />
+          <FlowDiagram />
+          <TraceViewer />
+          <ResultPanel />
+        </>
+      )}
+      <footer className="text-center text-sm mt-8">
+        <a href="https://offlyn.ai" className="text-blue-500">
+          https://offlyn.ai
+        </a>
+      </footer>
     </div>
   )
 }
