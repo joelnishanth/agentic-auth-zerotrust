@@ -1,0 +1,92 @@
+version: '3.9'
+services:
+  frontend:
+    build: ./frontend
+    ports:
+      - "3000:3000"
+    depends_on:
+      - agent
+
+  auth-service:
+    image: quay.io/keycloak/keycloak:21.0.1
+    command: ["start-dev", "--import-realm"]
+    environment:
+      KEYCLOAK_ADMIN: admin
+      KEYCLOAK_ADMIN_PASSWORD: admin
+    volumes:
+      - ./keycloak/realm-export.json:/opt/keycloak/data/import/realm-export.json
+    ports:
+      - "8080:8080"
+
+  agent:
+    build: ./agent
+    environment:
+      MIDDLEWARE_URL: http://middleware:8001/query
+    depends_on:
+      - middleware
+    ports:
+      - "8000:8000"
+
+  middleware:
+    build: ./middleware
+    environment:
+      OPA_URL: http://opa:8181/v1/data/authz/allow
+      LOGGER_URL: http://logger:9000/log
+      US_DB_DSN: postgres://postgres:postgres@postgres_us:5432/us_db
+      EU_DB_DSN: postgres://postgres:postgres@postgres_eu:5432/eu_db
+      SBX_DB_DSN: postgres://postgres:postgres@postgres_sbx:5432/sandbox_db
+    depends_on:
+      - opa
+      - postgres_us
+      - postgres_eu
+      - postgres_sbx
+    ports:
+      - "8001:8001"
+
+  opa:
+    image: openpolicyagent/opa:0.57.0
+    command: ["run", "--server", "-b", "/policies"]
+    volumes:
+      - ./policies:/policies
+    ports:
+      - "8181:8181"
+
+  postgres_us:
+    image: postgres:15-alpine
+    environment:
+      POSTGRES_DB: us_db
+      POSTGRES_USER: postgres
+      POSTGRES_PASSWORD: postgres
+    ports:
+      - "5433:5432"
+    volumes:
+      - ./db/us_init.sql:/docker-entrypoint-initdb.d/init.sql
+
+  postgres_eu:
+    image: postgres:15-alpine
+    environment:
+      POSTGRES_DB: eu_db
+      POSTGRES_USER: postgres
+      POSTGRES_PASSWORD: postgres
+    ports:
+      - "5434:5432"
+    volumes:
+      - ./db/eu_init.sql:/docker-entrypoint-initdb.d/init.sql
+
+  postgres_sbx:
+    image: postgres:15-alpine
+    environment:
+      POSTGRES_DB: sandbox_db
+      POSTGRES_USER: postgres
+      POSTGRES_PASSWORD: postgres
+    ports:
+      - "5435:5432"
+    volumes:
+      - ./db/sbx_init.sql:/docker-entrypoint-initdb.d/init.sql
+
+  logger:
+    build: ./logger
+    ports:
+      - "9000:9000"
+    volumes:
+      - ./logs:/logs
