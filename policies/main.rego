@@ -19,11 +19,11 @@ allowed_dbs = {
 }
 
 allow {
-  input.user.role == role
-  input.action == action
-  input.resource == resource
-  action in allowed_roles[role][resource]
-  input.db in allowed_dbs[role]
+  role := input.user.role
+  action := input.action
+  resource := input.resource
+  allowed_roles[role][resource][_] == action
+  allowed_dbs[role][_] == input.db
   patient_permitted
 }
 
