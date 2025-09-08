@@ -1,11 +1,55 @@
 <!DOCTYPE html>
 <html>
 <head>
-    <title>Silent Check SSO</title>
+    <title>Silent SSO Check</title>
+    <meta charset="utf-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1">
 </head>
 <body>
     <script>
-        parent.postMessage(location.href, location.origin);
+        // This page is used by Keycloak for silent SSO checks
+        // It should be minimal and fast-loading
+        
+        // Get the parent window's origin for security
+        const parentOrigin = document.referrer ? new URL(document.referrer).origin : window.location.origin;
+        
+        // Extract any authentication result from the URL
+        const urlParams = new URLSearchParams(window.location.search);
+        const fragment = window.location.hash.substring(1);
+        const fragmentParams = new URLSearchParams(fragment);
+        
+        // Combine URL params and fragment params
+        const allParams = {};
+        for (const [key, value] of urlParams) {
+            allParams[key] = value;
+        }
+        for (const [key, value] of fragmentParams) {
+            allParams[key] = value;
+        }
+        
+        // Send the result back to the parent window
+        if (window.parent && window.parent !== window) {
+            try {
+                window.parent.postMessage({
+                    type: 'keycloak-silent-check-sso',
+                    params: allParams,
+                    url: window.location.href
+                }, parentOrigin);
+            } catch (e) {
+                console.error('Failed to post message to parent:', e);
+            }
+        }
+        
+        // Close this window/iframe after a short delay
+        setTimeout(() => {
+            if (window.parent && window.parent !== window) {
+                // This is in an iframe, let the parent handle cleanup
+                return;
+            } else {
+                // This is a popup window, close it
+                window.close();
+            }
+        }, 100);
     </script>
 </body>
 </html>

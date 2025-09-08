@@ -1,0 +1,83 @@
+<!DOCTYPE html>
+<html>
+<head>
+    <title>Keycloak Login Test</title>
+    <script src="https://unpkg.com/keycloak-js@23.0.6/dist/keycloak.min.js"></script>
+</head>
+<body>
+    <h1>Keycloak Login Test</h1>
+    <div id="status">Initializing...</div>
+    <button id="loginBtn" style="display:none;">Login</button>
+    <button id="logoutBtn" style="display:none;">Logout</button>
+    <div id="userInfo" style="display:none;"></div>
+
+    <script>
+        const keycloak = new Keycloak({
+            url: 'http://localhost:8080/',
+            realm: 'zerotrust',
+            clientId: 'demo-ui'
+        });
+
+        const statusDiv = document.getElementById('status');
+        const loginBtn = document.getElementById('loginBtn');
+        const logoutBtn = document.getElementById('logoutBtn');
+        const userInfoDiv = document.getElementById('userInfo');
+
+        function updateStatus(message) {
+            statusDiv.textContent = message;
+            console.log(message);
+        }
+
+        keycloak.init({ 
+            onLoad: 'check-sso',
+            checkLoginIframe: false,
+            enableLogging: true
+        }).then(function(authenticated) {
+            updateStatus('Keycloak initialized. Authenticated: ' + authenticated);
+            
+            if (authenticated) {
+                loginBtn.style.display = 'none';
+                logoutBtn.style.display = 'block';
+                userInfoDiv.style.display = 'block';
+                userInfoDiv.innerHTML = '<h3>User Info:</h3><pre>' + JSON.stringify(keycloak.tokenParsed, null, 2) + '</pre>';
+            } else {
+                loginBtn.style.display = 'block';
+                logoutBtn.style.display = 'none';
+                userInfoDiv.style.display = 'none';
+            }
+        }).catch(function(error) {
+            updateStatus('Failed to initialize Keycloak: ' + error);
+            console.error('Keycloak init error:', error);
+        });
+
+        loginBtn.addEventListener('click', function() {
+            updateStatus('Redirecting to login...');
+            keycloak.login({
+                loginHint: 'superdev'
+            });
+        });
+
+        logoutBtn.addEventListener('click', function() {
+            keycloak.logout();
+        });
+
+        // Add event listeners for debugging
+        keycloak.onReady = function(authenticated) {
+            console.log('Keycloak ready, authenticated:', authenticated);
+        };
+
+        keycloak.onAuthSuccess = function() {
+            console.log('Keycloak auth success');
+        };
+
+        keycloak.onAuthError = function(error) {
+            console.error('Keycloak auth error:', error);
+            updateStatus('Auth error: ' + JSON.stringify(error));
+        };
+
+        keycloak.onTokenExpired = function() {
+            console.log('Keycloak token expired');
+        };
+    </script>
+</body>
+</html>

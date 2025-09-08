@@ -31,6 +31,7 @@ services:
     environment:
       OPA_URL: http://opa:8181/v1/data/authz/allow
       LOGGER_URL: http://logger:9000/log
+      OLLAMA_URL: http://host.docker.internal:11434/api/generate
       US_DB_DSN: postgres://postgres:postgres@postgres_us:5432/us_db
       EU_DB_DSN: postgres://postgres:postgres@postgres_eu:5432/eu_db
       SBX_DB_DSN: postgres://postgres:postgres@postgres_sbx:5432/sandbox_db
@@ -89,3 +90,30 @@ services:
       - "9000:9000"
     volumes:
       - ./logs:/logs
+
+  mcp-server:
+    build: ./mcp-server
+    environment:
+      MIDDLEWARE_URL: http://middleware:8001/query
+    depends_on:
+      - middleware
+    ports:
+      - "5001:5001"
+    stdin_open: true
+    tty: true
+
+  data-generator:
+    build: ./data-generator
+    environment:
+      OLLAMA_URL: http://host.docker.internal:11434/api/generate
+      US_DB_DSN: postgres://postgres:postgres@postgres_us:5432/us_db
+      EU_DB_DSN: postgres://postgres:postgres@postgres_eu:5432/eu_db
+      SBX_DB_DSN: postgres://postgres:postgres@postgres_sbx:5432/sandbox_db
+    depends_on:
+      - postgres_us
+      - postgres_eu
+      - postgres_sbx
+    restart: "no"
+    deploy:
+      restart_policy:
+        condition: none

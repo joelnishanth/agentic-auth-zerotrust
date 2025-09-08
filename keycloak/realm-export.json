@@ -15,16 +15,39 @@
       "clientId": "demo-ui",
       "enabled": true,
       "publicClient": true,
-      "redirectUris": ["http://localhost:3000/*", "http://localhost:3000"],
-      "webOrigins": ["http://localhost:3000", "*"],
+      "redirectUris": ["http://localhost:3000/*", "http://localhost:3000/demo", "http://localhost:3000/", "http://localhost:3000/silent-check-sso.html"],
+      "webOrigins": ["http://localhost:3000", "http://localhost:3000/*", "*"],
       "protocol": "openid-connect",
       "fullScopeAllowed": true,
       "standardFlowEnabled": true,
       "implicitFlowEnabled": false,
       "directAccessGrantsEnabled": true,
+      "serviceAccountsEnabled": false,
+      "authorizationServicesEnabled": false,
       "attributes": {
-        "post.logout.redirect.uris": "http://localhost:3000/*"
-      }
+        "post.logout.redirect.uris": "http://localhost:3000/*",
+        "oauth2.device.authorization.grant.enabled": "false",
+        "oidc.ciba.grant.enabled": "false",
+        "client.secret.creation.time": "1640995200",
+        "backchannel.logout.session.required": "true",
+        "backchannel.logout.revoke.offline.tokens": "false"
+      },
+      "protocolMappers": [
+        {
+          "name": "username",
+          "protocol": "openid-connect",
+          "protocolMapper": "oidc-usermodel-property-mapper",
+          "consentRequired": false,
+          "config": {
+            "userinfo.token.claim": "true",
+            "user.attribute": "username",
+            "id.token.claim": "true",
+            "access.token.claim": "true",
+            "claim.name": "preferred_username",
+            "jsonType.label": "String"
+          }
+        }
+      ]
     }
   ],
   "users": [

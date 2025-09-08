@@ -9,11 +9,13 @@ export default function Navigation({ darkMode, setDarkMode }) {
   const userName = profile?.preferred_username || profile?.name || 'User'
 
   const navItems = [
-    { path: '/', label: 'Home', icon: '🏠' },
-    { path: '/demo', label: 'Demo', icon: '🎮' },
-    { path: '/architecture', label: 'Architecture', icon: '🏗️' },
-    { path: '/docs', label: 'API Docs', icon: '📚' },
-    { path: '/policies', label: 'Policies', icon: '🔒' }
+    { path: '/', label: 'Home', icon: 'HOME' },
+    { path: '/demo', label: 'Demo', icon: 'DEMO' },
+    { path: '/mcp-demo', label: 'MCP Demo', icon: 'MCP' },
+    { path: '/patient-demo', label: 'Patient Portal', icon: 'PATIENT' },
+    { path: '/architecture', label: 'Architecture', icon: 'ARCH' },
+    { path: '/docs', label: 'API Docs', icon: 'DOCS' },
+    { path: '/policies', label: 'Policies', icon: 'POLICY' }
   ]
 
   const logout = () => {
@@ -55,7 +57,6 @@ export default function Navigation({ darkMode, setDarkMode }) {
                       : 'text-gray-600 hover:bg-white/20 hover:text-gray-800'
                 }`}
               >
-                <span className="mr-2">{item.icon}</span>
                 {item.label}
               </Link>
             ))}
@@ -125,7 +126,6 @@ export default function Navigation({ darkMode, setDarkMode }) {
                       : 'text-gray-600 hover:bg-white/20 hover:text-gray-800'
                 }`}
               >
-                <span className="mr-2">{item.icon}</span>
                 {item.label}
               </Link>
             ))}

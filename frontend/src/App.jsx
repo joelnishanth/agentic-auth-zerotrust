@@ -3,6 +3,8 @@ import { BrowserRouter as Router, Routes, Route } from 'react-router-dom'
 import Navigation from './components/Navigation'
 import HomePage from './components/HomePage'
 import DemoPage from './components/DemoPage'
+import MCPDemoPage from './components/MCPDemoPage'
+import PatientDemoPage from './components/PatientDemoPage'
 import ArchitecturePage from './components/ArchitecturePage'
 import DocsPage from './components/DocsPage'
 import PoliciesPage from './components/PoliciesPage'
@@ -23,6 +25,8 @@ export default function App() {
           <Routes>
             <Route path="/" element={<HomePage />} />
             <Route path="/demo" element={<DemoPage />} />
+            <Route path="/mcp-demo" element={<MCPDemoPage />} />
+            <Route path="/patient-demo" element={<PatientDemoPage />} />
             <Route path="/architecture" element={<ArchitecturePage />} />
             <Route path="/docs" element={<DocsPage />} />
             <Route path="/policies" element={<PoliciesPage />} />

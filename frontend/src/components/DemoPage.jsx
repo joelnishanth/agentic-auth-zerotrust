@@ -52,9 +52,9 @@ export default function DemoPage() {
                 },
                 {
                   step: '2', 
-                  title: 'Natural Language',
-                  description: 'Use the text input to ask questions in plain English and watch AI convert them to SQL',
-                  icon: '🧠'
+                  title: 'Text-to-SQL AI',
+                  description: 'Ask questions in plain English - AI converts them to SQL automatically with database-specific patterns',
+                  icon: '🤖'
                 },
                 {
                   step: '3',
@@ -109,12 +109,12 @@ export default function DemoPage() {
                   icon: '❌'
                 },
                 {
-                  title: 'Natural Language Queries',
-                  description: 'Ask questions in plain English and watch AI convert to SQL',
+                  title: 'Text-to-SQL Natural Language',
+                  description: 'Ask questions in plain English - AI converts to database-specific SQL',
                   examples: [
-                    '"How many patients do we have?"',
-                    '"Show me notes from last week"',
-                    '"List all therapists in the system"'
+                    '"Show average outcome score" (Sandbox)',
+                    '"How many patients by diagnosis?" (Research)',
+                    '"List patients with therapists" (Production)'
                   ],
                   color: 'from-blue-500 to-cyan-500',
                   icon: '🤖'
