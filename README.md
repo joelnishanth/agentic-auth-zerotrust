@@ -124,10 +124,10 @@ git clone https://github.com/your-username/agentic-auth-zerotrust.git
 cd agentic-auth-zerotrust
 
 # Set up Ollama (required for AI features)
-./setup-ollama.sh
+./scripts/setup-ollama.sh
 
 # Deploy the entire stack
-./deploy.sh
+./scripts/deploy.sh
 ```
 
 ### Manual Setup
@@ -246,11 +246,11 @@ npm run dev
 
 ```bash
 # Run all tests
-./test-all-scenarios.sh
+./scripts/test-all-scenarios.sh
 
 # Test specific components
-./test-keycloak.sh
-./test-patient-portal.sh
+./scripts/test-keycloak.sh
+./scripts/test-patient-portal.sh
 ```
 
 ### Project Structure
@@ -264,7 +264,9 @@ npm run dev
 ├── mcp-server/           # Model Context Protocol server
 ├── middleware/           # Business logic and AI integration
 ├── policies/             # OPA Rego policies
-└── db/                   # Database initialization scripts
+├── scripts/              # Shell scripts for deployment and testing
+├── db/                   # Database initialization scripts
+└── .github/              # GitHub templates and workflows
 ```
 
 ## 📚 Documentation

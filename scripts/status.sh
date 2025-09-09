@@ -13,10 +13,10 @@ NC='\033[0m'
 echo -e "${BLUE}🛡️  Zero Trust Architecture - Quick Status${NC}"
 echo -e "${BLUE}===========================================${NC}\n"
 
-# Check if docker-compose is running
-if ! docker-compose ps | grep -q "Up"; then
+# Check if docker compose is running
+if ! docker compose ps | grep -q "Up"; then
     echo -e "${RED}❌ No services are currently running${NC}"
-    echo -e "${YELLOW}💡 Run './deploy.sh' to start the deployment${NC}"
+    echo -e "${YELLOW}💡 Run './scripts/deploy.sh' to start the deployment${NC}"
     exit 1
 fi
 
@@ -24,8 +24,8 @@ echo -e "${GREEN}✅ Services are running!${NC}\n"
 
 # Quick service check
 echo -e "${BLUE}📊 Service Status:${NC}"
-docker-compose ps --format "table {{.Name}}\t{{.Status}}\t{{.Ports}}" | head -1
-docker-compose ps --format "table {{.Name}}\t{{.Status}}\t{{.Ports}}" | tail -n +2 | while read line; do
+docker compose ps --format "table {{.Name}}\t{{.Status}}\t{{.Ports}}" | head -1
+docker compose ps --format "table {{.Name}}\t{{.Status}}\t{{.Ports}}" | tail -n +2 | while read line; do
     if echo "$line" | grep -q "Up"; then
         echo -e "${GREEN}✅${NC} $line"
     else
@@ -53,5 +53,5 @@ else
 fi
 
 echo
-echo -e "${YELLOW}💡 For detailed status: ./deploy.sh status${NC}"
-echo -e "${YELLOW}💡 To view logs: ./deploy.sh logs [service-name]${NC}"
+echo -e "${YELLOW}💡 For detailed status: ./scripts/deploy.sh status${NC}"
+echo -e "${YELLOW}💡 To view logs: ./scripts/deploy.sh logs [service-name]${NC}"

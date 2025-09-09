@@ -30,7 +30,7 @@ if [ $? -eq 0 ]; then
     echo "✅ Model downloaded successfully!"
     echo ""
     echo "🎯 Setup complete! You can now:"
-    echo "   1. Run: docker-compose up"
+    echo "   1. Run: docker compose up"
     echo "   2. Go to: http://localhost:3000/demo"
     echo "   3. Login and try natural language queries"
     echo ""

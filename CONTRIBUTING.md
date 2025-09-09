@@ -21,12 +21,12 @@ Thank you for your interest in contributing to the Zero Trust Architecture Demo!
 
 2. **Set up Ollama (required for AI features)**
    ```bash
-   ./setup-ollama.sh
+   ./scripts/setup-ollama.sh
    ```
 
 3. **Start the application**
    ```bash
-   ./deploy.sh
+   ./scripts/deploy.sh
    ```
 
 4. **Access the demo**
@@ -72,7 +72,7 @@ Thank you for your interest in contributing to the Zero Trust Architecture Demo!
 
 Run the test suite:
 ```bash
-./test-all-scenarios.sh
+./scripts/test-all-scenarios.sh
 ```
 
 ## Contributing Guidelines

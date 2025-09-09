@@ -4,7 +4,7 @@
 
 ### 🚀 One-Command Deployment
 ```bash
-./deploy.sh
+./scripts/deploy.sh
 ```
 
 This will automatically:
@@ -26,7 +26,7 @@ The deployment script provides:
 
 ### Deploy the Stack
 ```bash
-./deploy.sh deploy
+./scripts/deploy.sh deploy
 ```
 - Builds and starts all services
 - Populates databases with AI-generated data
@@ -35,7 +35,7 @@ The deployment script provides:
 
 ### Check Status
 ```bash
-./deploy.sh status
+./scripts/deploy.sh status
 ```
 - Shows container status
 - Performs health checks on all services
@@ -43,14 +43,14 @@ The deployment script provides:
 
 ### View Logs
 ```bash
-./deploy.sh logs                    # List available services
-./deploy.sh logs frontend           # View frontend logs
-./deploy.sh logs data-generator     # View data generation logs
+./scripts/deploy.sh logs                    # List available services
+./scripts/deploy.sh logs frontend           # View frontend logs
+./scripts/deploy.sh logs data-generator     # View data generation logs
 ```
 
 ### Clean Up
 ```bash
-./deploy.sh cleanup
+./scripts/deploy.sh cleanup
 ```
 - Stops all containers
 - Removes containers and networks
@@ -121,13 +121,13 @@ All accounts use password: `password`
 
 #### Services Not Starting
 ```bash
-./deploy.sh status          # Check service status
-./deploy.sh logs [service]  # View specific service logs
+./scripts/deploy.sh status          # Check service status
+./scripts/deploy.sh logs [service]  # View specific service logs
 ```
 
 #### Database Connection Issues
 ```bash
-./deploy.sh logs data-generator  # Check data population
+./scripts/deploy.sh logs data-generator  # Check data population
 docker-compose ps               # Verify database containers
 ```
 
