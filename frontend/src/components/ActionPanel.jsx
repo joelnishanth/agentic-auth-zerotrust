@@ -206,7 +206,7 @@ const getPersonaScenarios = (role, username) => {
 }
 
 export default function ActionPanel() {
-  const { token, profile, setTrace, setResult, reset } = useFlowStore()
+  const { token, profile, setTrace, setResult, resetFlow } = useFlowStore()
   const [question, setQuestion] = useState('')
   const [selectedDb, setSelectedDb] = useState('us_db')
   const [loading, setLoading] = useState(false)
@@ -224,7 +224,7 @@ export default function ActionPanel() {
     
     // Auto-execute the query
     setLoading(true)
-    reset()
+    resetFlow()
     
     try {
       setTrace({ agent: 'processing', middleware: 'idle', opa: 'idle', db: 'idle' })
@@ -258,7 +258,7 @@ export default function ActionPanel() {
   const askNaturalLanguage = async (selectedDb = 'us_db') => {
     if (!token || !question.trim()) return
     setLoading(true)
-    reset()
+    resetFlow()
     
     try {
       setTrace({ agent: 'processing', middleware: 'idle', opa: 'idle', db: 'idle' })

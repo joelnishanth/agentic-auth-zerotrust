@@ -1,5 +1,6 @@
 import { Link, useLocation } from 'react-router-dom'
 import useFlowStore from '../state/useFlowStore'
+import { performLogout } from '../utils/logoutService'
 
 export default function Navigation({ darkMode, setDarkMode }) {
   const location = useLocation()
@@ -18,10 +19,8 @@ export default function Navigation({ darkMode, setDarkMode }) {
     { path: '/policies', label: 'Policies', icon: 'POLICY' }
   ]
 
-  const logout = () => {
-    setToken(null)
-    setProfile(null)
-    reset()
+  const logout = async () => {
+    await performLogout()
   }
 
   return (

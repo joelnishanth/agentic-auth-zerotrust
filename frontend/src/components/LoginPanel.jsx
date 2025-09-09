@@ -3,6 +3,7 @@ import { useNavigate } from 'react-router-dom'
 import Keycloak from 'keycloak-js'
 import jwtDecode from 'jwt-decode'
 import useFlowStore from '../state/useFlowStore'
+import { setKeycloakInstance, performLogout } from '../utils/logoutService'
 
 // Removed unused PKCE utility functions - Keycloak handles PKCE automatically
 
@@ -30,6 +31,9 @@ export default function LoginPanel() {
         realm: 'zerotrust',
         clientId: 'demo-ui'
       })
+      
+      // Register the Keycloak instance with the logout service
+      setKeycloakInstance(keycloakRef.current)
       
       // Add event listeners for debugging
       keycloakRef.current.onReady = (authenticated) => {
@@ -154,27 +158,7 @@ export default function LoginPanel() {
   }
 
   const logout = async () => {
-    try {
-      console.log('Starting logout process...')
-      
-      // Clear local state first
-      reset()
-      
-      // Then redirect to Keycloak logout
-      if (keycloakRef.current) {
-        await keycloakRef.current.logout({
-          redirectUri: window.location.origin
-        })
-      } else {
-        // If Keycloak instance is not available, force redirect
-        window.location.href = '/'
-      }
-    } catch (err) {
-      console.error('Logout failed:', err)
-      // Force logout on error by clearing state and redirecting
-      reset()
-      window.location.href = '/'
-    }
+    await performLogout()
   }
 
   // Auto-initialize on component mount (only once)

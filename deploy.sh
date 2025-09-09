@@ -327,14 +327,14 @@ monitor_service_startup() {
         fi
         
         # Check if container is running
-        local container_status=$(docker-compose ps -q $container_name 2>/dev/null)
+        local container_status=$(docker compose ps -q $container_name 2>/dev/null)
         if [ -z "$container_status" ]; then
             printf "\r${YELLOW}⏳ Waiting for ${service_name} container to start... (%ds)${NC}" $elapsed
             sleep 1
             continue
         fi
         
-        local running=$(docker inspect -f '{{.State.Running}}' $(docker-compose ps -q $container_name) 2>/dev/null)
+        local running=$(docker inspect -f '{{.State.Running}}' $(docker compose ps -q $container_name) 2>/dev/null)
         if [ "$running" != "true" ]; then
             printf "\r${YELLOW}⏳ ${service_name} container starting... (%ds)${NC}" $elapsed
             sleep 1
@@ -367,10 +367,10 @@ monitor_service_startup() {
 # Service status check
 check_container_status() {
     local container_name=$1
-    local status=$(docker-compose ps -q $container_name 2>/dev/null)
+    local status=$(docker compose ps -q $container_name 2>/dev/null)
     
     if [ -n "$status" ]; then
-        local running=$(docker inspect -f '{{.State.Running}}' $(docker-compose ps -q $container_name) 2>/dev/null)
+        local running=$(docker inspect -f '{{.State.Running}}' $(docker compose ps -q $container_name) 2>/dev/null)
         if [ "$running" = "true" ]; then
             echo -e "${GREEN}${CHECKMARK} ${container_name}${NC}"
             return 0
@@ -392,12 +392,12 @@ deploy_stack() {
     # Step 1: Clean up existing containers
     echo -e "${PURPLE}Step 1: Cleaning up existing deployment${NC}"
     show_advanced_progress 15 "Stopping existing containers..." "modern"
-    docker-compose down --remove-orphans > /dev/null 2>&1 || true
+    docker compose down --remove-orphans > /dev/null 2>&1 || true
     echo -e "${GREEN}${CHECKMARK} Cleanup complete${NC}\n"
     
     # Step 2: Build images
     echo -e "${PURPLE}Step 2: Building container images${NC}"
-    docker-compose build > /tmp/build.log 2>&1 &
+    docker compose build > /tmp/build.log 2>&1 &
     BUILD_PID=$!
     show_spinner $BUILD_PID "Building all service images"
     wait $BUILD_PID
@@ -412,7 +412,7 @@ deploy_stack() {
     # Step 3: Start core infrastructure
     echo -e "${PURPLE}Step 3: Starting core infrastructure${NC}"
     show_advanced_progress 12 "Starting databases and OPA..." "blocks"
-    docker-compose up -d postgres_us postgres_eu postgres_sbx opa > /dev/null 2>&1
+    docker compose up -d postgres_us postgres_eu postgres_sbx opa > /dev/null 2>&1
     
     # Wait for databases with enhanced monitoring
     echo -e "${DATABASE} Monitoring database initialization..."
@@ -425,14 +425,14 @@ deploy_stack() {
     # Step 4: Start authentication service
     echo -e "${PURPLE}Step 4: Starting authentication service${NC}"
     show_advanced_progress 8 "Starting Keycloak..." "classic"
-    docker-compose up -d auth-service > /dev/null 2>&1
+    docker compose up -d auth-service > /dev/null 2>&1
     monitor_service_startup "Keycloak" "auth-service" "http://localhost:8080/realms/zerotrust" 45
     echo -e "${GREEN}${CHECKMARK} Keycloak ready${NC}\n"
     
     # Step 5: Start application services
     echo -e "${PURPLE}Step 5: Starting application services${NC}"
     show_advanced_progress 12 "Starting middleware, agent, and logger..." "dots"
-    docker-compose up -d middleware agent logger mcp-server > /dev/null 2>&1
+    docker compose up -d middleware agent logger mcp-server > /dev/null 2>&1
     
     # Monitor each service startup
     monitor_service_startup "Agent" "agent" "http://localhost:8000/health" 30 &
@@ -444,14 +444,14 @@ deploy_stack() {
     # Step 6: Start frontend
     echo -e "${PURPLE}Step 6: Starting frontend${NC}"
     show_advanced_progress 8 "Starting React frontend..." "modern"
-    docker-compose up -d frontend > /dev/null 2>&1
+    docker compose up -d frontend > /dev/null 2>&1
     monitor_service_startup "Frontend" "frontend" "http://localhost:3000" 40
     echo -e "${GREEN}${CHECKMARK} Frontend ready${NC}\n"
     
     # Step 7: Run data generator
     echo -e "${PURPLE}Step 7: Populating databases${NC}"
     show_advanced_progress 5 "Starting data generator..." "blocks"
-    docker-compose up -d data-generator > /dev/null 2>&1
+    docker compose up -d data-generator > /dev/null 2>&1
     
     # Enhanced data generator monitoring
     echo -e "${BRAIN} Monitoring AI-powered data generation..."
@@ -461,7 +461,7 @@ deploy_stack() {
     local i=0
     
     while $data_gen_running; do
-        if ! docker-compose ps data-generator | grep -q "Up"; then
+        if ! docker compose ps data-generator | grep -q "Up"; then
             data_gen_running=false
         else
             local current_time=$(date +%s)
@@ -557,7 +557,7 @@ deploy_stack() {
     else
         echo -e "${RED}${CROSS} DEPLOYMENT COMPLETED WITH ISSUES${NC}"
         echo -e "${YELLOW}Some services may not be fully healthy. Check logs with:${NC}"
-        echo -e "${WHITE}docker-compose logs [service-name]${NC}"
+        echo -e "${WHITE}docker compose logs [service-name]${NC}"
     fi
 }
 
@@ -565,7 +565,7 @@ deploy_stack() {
 cleanup_deployment() {
     echo -e "${YELLOW}Cleaning up deployment...${NC}"
     show_progress 15 "Stopping all services..."
-    docker-compose down --remove-orphans > /dev/null 2>&1
+    docker compose down --remove-orphans > /dev/null 2>&1
     echo -e "${GREEN}${CHECKMARK} Cleanup complete${NC}"
 }
 
@@ -574,14 +574,14 @@ show_logs() {
     local service=$1
     if [ -z "$service" ]; then
         echo -e "${BLUE}Available services:${NC}"
-        docker-compose config --services
+        docker compose config --services
         echo
         echo -e "${YELLOW}Usage: $0 logs [service-name]${NC}"
         return
     fi
     
     echo -e "${BLUE}Showing logs for ${service}...${NC}"
-    docker-compose logs -f "$service"
+    docker compose logs -f "$service"
 }
 
 # Status function
@@ -590,7 +590,7 @@ show_status() {
     echo -e "${WHITE}================================${NC}\n"
     
     echo -e "${PURPLE}Container Status:${NC}"
-    docker-compose ps
+    docker compose ps
     echo
     
     echo -e "${PURPLE}Service Health:${NC}"

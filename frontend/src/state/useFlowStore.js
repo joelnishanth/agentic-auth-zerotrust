@@ -78,6 +78,15 @@ const useFlowStore = create((set, get) => ({
   },
   
   reset: () => set({ 
+    token: null,
+    profile: null,
+    trace: null, 
+    result: null, 
+    flow: { user: 'idle', agent: 'idle', middleware: 'idle', opa: 'idle', db: 'idle' } 
+  }),
+  
+  // Reset only the flow state, not authentication
+  resetFlow: () => set({ 
     trace: null, 
     result: null, 
     flow: { user: 'idle', agent: 'idle', middleware: 'idle', opa: 'idle', db: 'idle' } 
