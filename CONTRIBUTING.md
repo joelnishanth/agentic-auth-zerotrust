@@ -178,7 +178,7 @@ Instead, please email security@offlyn.ai with:
 
 - **GitHub Discussions**: For questions and general discussion
 - **Issues**: For bug reports and feature requests
-- **Email**: contact@offlyn.ai for general inquiries
+- **Email**: hi@offlyn.ai for general inquiries
 
 ### Code of Conduct
 
